@@ -8,7 +8,7 @@ const NoteState = (props) => {
 
   // Get All Notes
   const getNotes = async () => {
-    //TODO api call
+    //Api call
     const response = await fetch(`${HOST}/api/notes/fetchallnotes/`, {
       method: "GET",
       headers: {
@@ -17,8 +17,8 @@ const NoteState = (props) => {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjU5Zjk3MjMxZjAxZGRmMDI0ODZlNTZkIn0sImlhdCI6MTcwNDk3NDEwMn0.3NWEnroW3nHsCsAQnPlVBAcn37PKQx182KdO7dO40JI",
       },
     });
-    const json = await response.json();
-    setNotes(json);
+    const notes = await response.json();
+    setNotes(notes);
   };
 
   // Add Note
@@ -33,19 +33,9 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    const json = await response.json();
-
+    const newNote = await response.json();
     // add note client
-    const note = {
-      _id: json._id,
-      user: json.user,
-      title: json.title,
-      description: json.description,
-      tag: json.tag,
-      date: json.date,
-      __v: json.__v,
-    };
-    setNotes(notes.concat(note));
+    setNotes(notes.concat(newNote));
   };
 
   // Delete Note
@@ -58,7 +48,7 @@ const NoteState = (props) => {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjU5Zjk3MjMxZjAxZGRmMDI0ODZlNTZkIn0sImlhdCI6MTcwNDk3NDEwMn0.3NWEnroW3nHsCsAQnPlVBAcn37PKQx182KdO7dO40JI",
       },
     });
-    const json = response.json();
+    const json = await response.json();
     console.log(json);
     console.log("deleting a note with id " + id);
     const newNotes = notes.filter((note) => {
