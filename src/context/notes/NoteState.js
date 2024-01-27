@@ -18,7 +18,6 @@ const NoteState = (props) => {
       },
     });
     const json = await response.json();
-    console.log(json);
     setNotes(json);
   };
 
@@ -34,20 +33,19 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    const json = response.json();
+    const json = await response.json();
 
     // add note client
-    console.log("adding a new note", json);
-    // const note = {
-    //   _id: "65aa786bbc781bb46[added]",
-    //   user: "659f97231f01ddf02486e56d",
-    //   title: title,
-    //   description: description,
-    //   tag: tag,
-    //   date: "2024-01-17T07:50:19.520Z",
-    //   __v: 0,
-    // };
-    // setNotes(notes.concat(note));
+    const note = {
+      _id: json._id,
+      user: json.user,
+      title: json.title,
+      description: json.description,
+      tag: json.tag,
+      date: json.date,
+      __v: json.__v,
+    };
+    setNotes(notes.concat(note));
   };
 
   // Delete Note
@@ -73,7 +71,7 @@ const NoteState = (props) => {
   const editNote = async (id, title, description, tag) => {
     // Api call
     const response = await fetch(`${HOST}/api/notes/updatenote/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "auth-token":
@@ -81,16 +79,20 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    const json = response.json();
+    const json = await response.json();
+    console.log(json);
     // Logic to edit in client
+    let newNotes = JSON.parse(JSON.stringify(notes));
     for (let index = 0; index < notes.length; index++) {
-      const element = notes[index];
+      const element = newNotes[index];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
       }
     }
+    setNotes(newNotes);
   };
   return (
     <NoteContext.Provider
