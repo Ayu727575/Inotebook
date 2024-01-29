@@ -25,7 +25,7 @@ const NoteState = (props) => {
   const addNote = async (title, description, tag) => {
     //TODO api call
     const response = await fetch(`${HOST}/api/notes/addnote`, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         "auth-token":
